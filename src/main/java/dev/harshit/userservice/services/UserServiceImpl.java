@@ -6,11 +6,8 @@ import dev.harshit.userservice.models.User;
 import dev.harshit.userservice.repositories.TokenRepository;
 import dev.harshit.userservice.repositories.UserRepository;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -23,7 +20,6 @@ public class UserServiceImpl implements UserService {
     private TokenRepository tokenRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
     public UserServiceImpl(
             UserRepository userRepository,
             TokenRepository tokenRepository,
@@ -71,6 +67,9 @@ public class UserServiceImpl implements UserService {
         user.setName(name);
         user.setEmail(email);
         user.setHashedPassword(bCryptPasswordEncoder.encode(password));
+        user.setCreatedAt(new Date());
+        user.setUpdatedAt(new Date());
+        user.setDeleted(false);
 
         userRepository.save(user);
 
@@ -83,7 +82,8 @@ public class UserServiceImpl implements UserService {
                 .findByValueAndDeletedAndExpiryAtGreaterThan(token, false, new Date());
 
         if (tokenOptional.isEmpty()) {
-            throw new InvalidTokenException("Token is invalid or expired");
+//            throw new InvalidTokenException("Token is invalid or expired");
+            return null;
         }
 
         return tokenOptional.get().getUser();
@@ -92,10 +92,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void logout(String tokenValue) throws TokenNotFoundException {
 
-        Optional<Token> tokenOpt = tokenRepository.findByValueandDeleted(tokenValue, false);
+        Optional<Token> tokenOpt = tokenRepository.findByValueAndDeleted(tokenValue, false);
 
         if (tokenOpt.isEmpty()) {
-            throw new TokenNotFoundException("Token not found or already deleted");
+           throw new TokenNotFoundException("Token not found or already deleted");
         }
 
         Token token = tokenOpt.get();
@@ -107,11 +107,12 @@ public class UserServiceImpl implements UserService {
 
     private Token createToken(User user) {
         Token token = new Token();
+        token.setCreatedAt(new Date());
+        token.setUpdatedAt(new Date());
         token.setUser(user);
         token.setValue(RandomStringUtils.randomAlphanumeric(128));
 
-        // How to set a date 30 days from today :- 
-
+        // How to set a date 30 days from today :-
         Date currentDate = new Date();                    // Get the current date
         Calendar calendar = Calendar.getInstance();       // Create a Calendar object
         calendar.setTime(currentDate);                    // Set Calendar object to current date

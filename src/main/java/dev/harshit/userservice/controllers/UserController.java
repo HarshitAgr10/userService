@@ -38,13 +38,13 @@ public class UserController {
 
         User user = userService.signUp(
                 signUpRequestDto.getName(),
-                signUpRequestDto.getName(),
+                signUpRequestDto.getEmail(),
                 signUpRequestDto.getPassword()
                 );
 
         SignUpResponseDto responseDto = new SignUpResponseDto();
-        responseDto.setName(responseDto.getName());
-        responseDto.setEmail(responseDto.getEmail());
+        responseDto.setName(user.getName());
+        responseDto.setEmail(user.getEmail());
         responseDto.setResponseStatus(ResponseStatus.SUCCESS);
 
         return responseDto;

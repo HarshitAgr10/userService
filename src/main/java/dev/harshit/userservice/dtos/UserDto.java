@@ -21,8 +21,8 @@ public class UserDto {
 
         UserDto userDto = new UserDto();
         userDto.setName(user.getName());
-        userDto.setEmail(userDto.getEmail());
-        userDto.setRoles(userDto.getRoles());
+        userDto.setEmail(user.getEmail());
+        userDto.setRoles(user.getRoles());
 
         return userDto;
     }

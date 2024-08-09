@@ -1,10 +1,8 @@
 package dev.harshit.userservice.services;
 
-import dev.harshit.userservice.dtos.LoginRequestDto;
 import dev.harshit.userservice.exceptions.*;
 import dev.harshit.userservice.models.Token;
 import dev.harshit.userservice.models.User;
-import org.springframework.web.servlet.ModelAndView;
 
 public interface UserService {
     public Token login(String email, String password)
