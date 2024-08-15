@@ -103,6 +103,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User validateToken(String token) throws InvalidTokenException {
+        System.out.println("Calling validate token");       // To check how load balancing works
+
         Optional<Token> tokenOptional = tokenRepository
                 .findByValueAndDeletedAndExpiryAtGreaterThan(token, false, new Date());
 
